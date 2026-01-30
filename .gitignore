@@ -1,0 +1,22 @@
+# Variáveis de ambiente (Segurança!)
+.env
+
+# Python (Arquivos compilados e cache)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv
+venv/
+ENV/
+
+# Poetry
+.python-version
+dist/
+
+# Streamlit
+.streamlit/
+
+# SO
+.DS_Store
+Thumbs.db

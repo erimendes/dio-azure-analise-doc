@@ -1,0 +1,77 @@
+Relatório Técnico – Consulta de CEP utilizando Node-RED
+Estudante: [Seu Nome Aqui]
+
+Data: 31 de Janeiro de 2026
+
+Curso: [Seu Curso Aqui]
+
+1. Introdução
+Este relatório apresenta o desenvolvimento de um sistema de consulta de CEP utilizando a plataforma Node-RED. O sistema permite o envio de um CEP por meio de requisições HTTP, utilizando os métodos GET ou POST, retornando informações de localização referentes ao CEP informado.
+
+2. Objetivo
+Implementar um serviço web capaz de receber um CEP, realizar a consulta em uma API pública (ViaCEP) e retornar exclusivamente os dados de cidade, bairro e estado em formato JSON.
+
+3. Tecnologias Utilizadas
+Node-RED: Ferramenta de desenvolvimento baseada em fluxos para integração de hardware e serviços.
+
+API ViaCEP: Serviço gratuito para consulta de endereços do Brasil.
+
+Protocolo HTTP: Métodos de comunicação GET e POST.
+
+JSON: Formato de organização de dados.
+
+4. Funcionamento do Sistema
+O sistema processa a informação em cinco etapas principais:
+
+Entrada: Recebe o CEP via URL (GET) ou corpo da mensagem (POST).
+
+Validação: Uma função limpa o texto e verifica se o CEP foi enviado.
+
+Requisição: O sistema consulta o servidor do ViaCEP.
+
+Filtro: Os dados brutos são filtrados para exibir apenas Cidade, Bairro e Estado.
+
+Resposta: O resultado final é enviado ao navegador ou cliente HTTP.
+
+5. Fluxo Desenvolvido
+Abaixo, a representação visual dos nós no ambiente Node-RED:
+
+(Insira aqui o seu print: fluxo-node-red-consulta-cep.png)
+
+6. Configuração dos Nós (Scripts)
+A. Tratamento do CEP (Nó Function):
+
+JavaScript
+let cep = msg.req.query.cep || msg.payload.cep;
+if (!cep) {
+    msg.statusCode = 400;
+    msg.payload = { erro: "CEP não informado" };
+    return msg;
+}
+msg.cep = cep.replace(/\D/g, "");
+return msg;
+B. Formatação da Resposta (Nó Function):
+
+JavaScript
+if (msg.payload.erro) {
+    msg.statusCode = 404;
+    msg.payload = { erro: "CEP não encontrado" };
+    return msg;
+}
+msg.payload = {
+    cidade: msg.payload.localidade,
+    bairro: msg.payload.bairro,
+    estado: msg.payload.uf
+};
+return msg;
+7. Exemplos de Saída
+Ao realizar uma requisição para o endereço configurado, o sistema retorna o seguinte JSON:
+
+JSON
+{
+  "cidade": "São Paulo",
+  "bairro": "Sé",
+  "estado": "SP"
+}
+8. Conclusão
+O projeto foi concluído com sucesso, demonstrando a versatilidade do Node-RED para a criação de APIs de integração. O sistema trata erros de entrada e fornece uma resposta limpa e objetiva conforme solicitado.
